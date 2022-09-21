@@ -57,7 +57,11 @@ class LoginController extends Controller
           Session::put('uid',$loginuid);
 
           $result = Auth::login($user);
-          return redirect($this->redirectPath());
+          if($request['email'] == 'admin@gmail.com'){
+            return view('admin');
+          }else{
+            return redirect($this->redirectPath());
+          }
        } catch (FirebaseException $e) {
           throw ValidationException::withMessages([$this->username() => [trans('auth.failed')],]);
        }
