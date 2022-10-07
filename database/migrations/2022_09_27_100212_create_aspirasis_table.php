@@ -15,7 +15,7 @@ class CreateAspirasisTable extends Migration
     {
         Schema::create('aspirasis', function (Blueprint $table) {
             $table->id();
-            $table->string('uid');
+            $table->foreignId('user_id');
             $table->string('title');
             $table->string('description');
             $table->timestamps();

@@ -4,11 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ApiFormatter;
 use App\Http\Controllers\Controller;
-use App\Models\LaporAcara;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 
-class LaporAcaraController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +17,7 @@ class LaporAcaraController extends Controller
      */
     public function index()
     {
-        $data = LaporAcara::all();
+        $data = User::all();
         if($data){
             return ApiFormatter::createApi(200, "Success", $data);
         }else{
@@ -45,23 +45,20 @@ class LaporAcaraController extends Controller
     {
         try{
             $request->validate([
-                'code' => 'required',
-                'title' => 'required',
-                'date' => 'required',
-                'time' => 'required',
-                'description' => 'required',
+                'uid' => 'required',
+                'name' => 'required',
+                'email' => 'required',
+                'password' => 'required',
             ]);
 
-            $laporAcara = LaporAcara::create([
-                'code' => $request->code,
-                'title' => $request->title,
-                'date' => $request->date,
-                'time' => $request->time,
-                'description' => $request->description,
-                'status' => 0
+            $user = User::create([
+                'uid' => $request->uid,
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => $request->password,
             ]);
 
-            $data = LaporAcara::where('id', '=', $laporAcara->id)->get();
+            $data = User::where('id', '=', $user->id)->get();
 
             if($data){
                 return ApiFormatter::createApi(200, "Success", $data);
@@ -70,7 +67,7 @@ class LaporAcaraController extends Controller
             }
 
         }catch(Exception $error){
-            return ApiFormatter::createApi(400, "Failed");
+            return ApiFormatter::createApi(400, "Failed", $error);
         }
     }
 
@@ -82,7 +79,12 @@ class LaporAcaraController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = User::where('id', '=', $id)->get();
+        if($data){
+            return ApiFormatter::createApi(200, "Success", $data);
+        }else{
+            return ApiFormatter::createApi(400, "Failed");
+        }
     }
 
     /**

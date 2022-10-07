@@ -58,9 +58,9 @@ class LoginController extends Controller
 
           $result = Auth::login($user);
           if($request['email'] == 'aladinozulmar@gmail.com'){
-            return view('admin');
+            return 'ini halaman admin';
           }else{
-            return redirect($this->redirectPath());
+            return 'ini bukan halaman admin';
           }
        } catch (FirebaseException $e) {
           throw ValidationException::withMessages([$this->username() => [trans('auth.failed')],]);

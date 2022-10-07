@@ -9,6 +9,7 @@ use App\Http\Controllers\API\KoorUmumController;
 use App\Http\Controllers\API\LaporAcaraController;
 use App\Http\Controllers\API\LaporKotorController;
 use App\Http\Controllers\API\PetugasController;
+use App\Http\Controllers\API\UserController;
 use App\Models\KoorGedung;
 use App\Models\LaporKotor;
 use Illuminate\Http\Request;
@@ -24,6 +25,10 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::get('user', [UserController::class, 'index']);
+Route::post('user/store', [UserController::class, 'store']);
+Route::get('user/show/{id}', [UserController::class, 'show']);
+
 Route::get('petugas', [PetugasController::class, 'index']);
 Route::post('petugas/store', [PetugasController::class, 'store']);
 Route::get('petugas/show/{id}', [PetugasController::class, 'show']);
@@ -61,6 +66,6 @@ Route::post('laporKotor/store', [LaporKotorController::class, 'store']);
 Route::get('laporKotor/show/{id}', [LaporKotorController::class, 'show']);
 
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });

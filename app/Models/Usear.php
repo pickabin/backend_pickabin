@@ -35,5 +35,4 @@ class User extends Model
     {
         return $this->hasOne(Aspirasi::class);
     }
-
 }

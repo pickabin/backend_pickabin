@@ -45,13 +45,14 @@ class JadwalController extends Controller
     {
         try{
             $request->validate([
-                'uid' => 'required',
+                'user_id' => 'required',
                 'clean_area' => 'required',
             ]);
 
             $jadwal = Jadwal::create([
-                'uid' => $request->uid,
+                'user_id' => $request->user_id,
                 'clean_area' => $request->clean_area,
+                'status' => 0
             ]);
 
             $data = Jadwal::where('id', '=', $jadwal->id)->get();

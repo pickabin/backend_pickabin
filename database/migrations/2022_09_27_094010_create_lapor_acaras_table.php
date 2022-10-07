@@ -15,12 +15,12 @@ class CreateLaporAcarasTable extends Migration
     {
         Schema::create('lapor_acaras', function (Blueprint $table) {
             $table->id();
-            $table->string('koor_code');
-            $table->string('clean_area');
+            $table->string('code');
             $table->string('title');
+            $table->string('description');
             $table->date('date');
             $table->time('time');
-            $table->string('description');
+            $table->boolean('status');
             $table->timestamps();
         });
     }

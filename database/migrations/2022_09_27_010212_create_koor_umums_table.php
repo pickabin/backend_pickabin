@@ -15,11 +15,7 @@ class CreateKoorUmumsTable extends Migration
     {
         Schema::create('koor_umums', function (Blueprint $table) {
             $table->id();
-            $table->string('uid');
-            $table->string('name');
-            $table->string('address');
-            $table->string('phone');
-            $table->string('email');
+            $table->foreignId('user_id');
             $table->string('photo')->nullable();
             $table->timestamps();
         });

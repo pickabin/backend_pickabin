@@ -45,15 +45,16 @@ class LaporKotorController extends Controller
     {
         try{
             $request->validate([
-                'koor_code' => 'required',
+                'code' => 'required',
                 'clean_area' => 'required',
                 'photo' => 'required',
             ]);
 
             $laporKotor = LaporKotor::create([
-                'koor_code' => $request->koor_code,
+                'code' => $request->code,
                 'clean_code' => $request->clean_code,
                 'photo' => $request->photo,
+                'status' => 0
             ]);
 
             $data = LaporKotor::where('id', '=', $laporKotor->id)->get();

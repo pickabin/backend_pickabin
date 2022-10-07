@@ -45,22 +45,15 @@ class KoorGedungController extends Controller
     {
         try{
             $request->validate([
-                'uid' => 'required',
-                'name' => 'required',
-                'address' => 'required',
-                'phone' => 'required',
+                'user_id' => 'required',
                 'code' => 'required',
-                'email' => 'required',
+                'clean_area' => 'required',
             ]);
 
             $koorGedung = KoorGedung::create([
-                'uid' => $request->uid,
-                'name' => $request->name,
-                'address' => $request->address,
-                'phone' => $request->phone,
+                'user_id' => $request->user_id,
                 'code' => $request->code,
-                'email' => $request->email,
-                'photo' => $request->photo,
+                'clean_area' => $request->clean_area,
             ]);
 
             $data = KoorGedung::where('id', '=', $koorGedung->id)->get();

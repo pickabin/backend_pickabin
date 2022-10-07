@@ -45,20 +45,11 @@ class KoorUmumController extends Controller
     {
         try{
             $request->validate([
-                'uid' => 'required',
-                'name' => 'required',
-                'address' => 'required',
-                'phone' => 'required',
-                'email' => 'required',
+                'user_id' => 'required',
             ]);
 
             $KoorUmum = KoorUmum::create([
-                'uid' => $request->uid,
-                'name' => $request->name,
-                'address' => $request->address,
-                'phone' => $request->phone,
-                'email' => $request->email,
-                'photo' => $request->photo
+                'user_id' => $request->user_id,
             ]);
 
             $data = KoorUmum::where('id', '=', $KoorUmum->id)->get();

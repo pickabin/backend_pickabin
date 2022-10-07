@@ -15,13 +15,9 @@ class CreatePetugasTable extends Migration
     {
         Schema::create('petugas', function (Blueprint $table) {
             $table->id();
-            $table->string('uid');
-            $table->string('koor_code');
+            $table->foreignId('user_id');
+            $table->string('code');
             $table->string('clean_area');
-            $table->string('name');
-            $table->string('address');
-            $table->string('phone');
-            $table->string('email');
             $table->string('photo')->nullable();
             $table->timestamps();
         });

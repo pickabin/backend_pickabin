@@ -45,16 +45,16 @@ class AspirasiController extends Controller
     {
         try{
             $request->validate([
-                'uid' => 'required',
+                'user_id' => 'required',
                 'title' => 'required',
                 'description' => 'required',
             ]);
 
             $aspirasi = Aspirasi::create([
-                'uid' => $request->uid,
+                'user_id' => $request->user_id,
                 'title' => $request->title,
                 'description' => $request->description,
-            ]);
+            ]); 
 
             $data = Aspirasi::where('id', '=', $aspirasi->id)->get();
 

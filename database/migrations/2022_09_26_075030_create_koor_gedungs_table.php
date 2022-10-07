@@ -15,12 +15,9 @@ class CreateKoorGedungsTable extends Migration
     {
         Schema::create('koor_gedungs', function (Blueprint $table) {
             $table->id();
-            $table->string('uid');
-            $table->string('name');
-            $table->string('address');
-            $table->string('phone');
+            $table->foreignId('user_id');
             $table->string('code');
-            $table->string('email');
+            $table->string('clean_area');
             $table->string('photo')->nullable();
             $table->timestamps();
         });

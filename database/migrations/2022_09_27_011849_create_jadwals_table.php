@@ -15,8 +15,9 @@ class CreateJadwalsTable extends Migration
     {
         Schema::create('jadwals', function (Blueprint $table) {
             $table->id();
-            $table->string('uid');
+            $table->foreignId('user_id');
             $table->string('clean_area');
+            $table->boolean('status');
             $table->timestamps();
         });
     }

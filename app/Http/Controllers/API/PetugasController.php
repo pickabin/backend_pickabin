@@ -45,24 +45,15 @@ class PetugasController extends Controller
     {
         try{
             $request->validate([
-                'uid' => 'required',
-                'koor_code' => 'required',
+                'user_id' => 'required',
+                'code' => 'required',
                 'clean_area' => 'required',
-                'name' => 'required',
-                'address' => 'required',
-                'phone' => 'required',
-                'email' => 'required',
             ]);
 
             $petugas = Petugas::create([
-                'uid' => $request->uid,
-                'koor_code' => $request->koor_code,
+                'user_id' => $request->user_id,
+                'code' => $request->code,
                 'clean_area' => $request->clean_area,
-                'name' => $request->name,
-                'address' => $request->address,
-                'phone' => $request->phone,
-                'email' => $request->email,
-                'photo' => $request->photo,
             ]);
 
             $data = Petugas::where('id', '=', $petugas->id)->get();

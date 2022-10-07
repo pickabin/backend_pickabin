@@ -15,9 +15,10 @@ class CreateLaporKotorsTable extends Migration
     {
         Schema::create('lapor_kotors', function (Blueprint $table) {
             $table->id();
-            $table->string('koor_code');
+            $table->string('code');
             $table->string('clean_area');
             $table->string('photo');
+            $table->boolean('status');
             $table->timestamps();
         });
     }
