@@ -4,8 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ApiFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\AktivitasKoor;
+use App\Models\AktivitasPetugas;
 use App\Models\Jadwal;
+use App\Models\KoorGedung;
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class JadwalController extends Controller
@@ -15,11 +19,19 @@ class JadwalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        $data = Jadwal::all();
-        if($data){
-            return ApiFormatter::createApi(200, "Success", $data);
+        $datas = Jadwal::where('user_id', $id)->get();
+        if($datas){
+            foreach($datas as $data){
+                if(($data->status == 1) && ($data->updated_at->format('m/d/Y') != Carbon::now()->format('m/d/Y'))){
+                    Jadwal::where('id', $data->id)->update([
+                        'status' => 0
+                    ]);
+                }
+            }  
+            $datas = Jadwal::where('user_id', $id)->with('user')->get();
+            return ApiFormatter::createApi(200, "Success", $datas);
         }else{
             return ApiFormatter::createApi(400, "Failed");
         }
@@ -43,30 +55,7 @@ class JadwalController extends Controller
      */
     public function store(Request $request)
     {
-        try{
-            $request->validate([
-                'user_id' => 'required',
-                'clean_area' => 'required',
-            ]);
-
-            $jadwal = Jadwal::create([
-                'user_id' => $request->user_id,
-                'clean_area' => $request->clean_area,
-                'status' => 0
-            ]);
-
-            $data = Jadwal::where('id', '=', $jadwal->id)->get();
-
-            if($data){
-                return ApiFormatter::createApi(200, "Success", $data);
-            }else{
-                return ApiFormatter::createApi(400, "Failed");
-            }
-
-        }catch(Exception $error){
-            return ApiFormatter::createApi(400, "Failed");
-
-        }
+        //
     }
 
     /**
@@ -100,7 +89,31 @@ class JadwalController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            Jadwal::where('user_id', $id)->update([
+                'status' => 1
+            ]);
+            $getKoor = KoorGedung::where('id', $id)->count();
+            $getJadwal = Jadwal::where('user_id', $id)->get();
+            if($getKoor != 0){
+                AktivitasKoor::create([
+                    'jadwal_id' => $getJadwal[0]->id,
+                    'date' =>  Carbon::now()->format('Y-d-m'),
+                    'time' =>  Carbon::now()->format('h:i'),
+                    'photo' => $request->photo
+                ]);
+            }else{
+                AktivitasPetugas::create([
+                    'jadwal_id' => $getJadwal[0]->id,
+                    'date' =>  Carbon::now()->format('Y-d-m'),
+                    'time' =>  Carbon::now()->format('h:i'),
+                    'photo' => $request->photo
+                ]);
+            }            
+            return ApiFormatter::createApi(200, "Success");
+        }catch(Exception $error){
+            return ApiFormatter::createApi(400, "Failed", $error);
+        }
     }
 
     /**

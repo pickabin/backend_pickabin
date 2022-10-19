@@ -4,9 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ApiFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\KoorGedung;
 use App\Models\LaporAcara;
+use App\Models\Petugas;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use PhpOption\LazyOption;
 
 class LaporAcaraController extends Controller
 {
@@ -15,9 +19,18 @@ class LaporAcaraController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        $data = LaporAcara::all();
+        $dataPetugas = Petugas::where('user_id', $id)->count();
+        $dataKoor = KoorGedung::where('user_id', $id)->count();
+        if($dataPetugas != 0 ){
+            $dataPetugas = Petugas::where('user_id', $id)->get();
+            $data = LaporAcara::where('code', $dataPetugas[0]->code)->get();
+        }else if($dataKoor != 0){
+            $dataKoor = KoorGedung::where('user_id', $id)->get();
+            $data = LaporAcara::where('code', $dataKoor[0]->code)->get();
+        }
+        
         if($data){
             return ApiFormatter::createApi(200, "Success", $data);
         }else{
@@ -44,14 +57,6 @@ class LaporAcaraController extends Controller
     public function store(Request $request)
     {
         try{
-            $request->validate([
-                'code' => 'required',
-                'title' => 'required',
-                'date' => 'required',
-                'time' => 'required',
-                'description' => 'required',
-            ]);
-
             $laporAcara = LaporAcara::create([
                 'code' => $request->code,
                 'title' => $request->title,
@@ -61,10 +66,8 @@ class LaporAcaraController extends Controller
                 'status' => 0
             ]);
 
-            $data = LaporAcara::where('id', '=', $laporAcara->id)->get();
-
-            if($data){
-                return ApiFormatter::createApi(200, "Success", $data);
+            if($laporAcara){
+                return ApiFormatter::createApi(200, "Success", $laporAcara);
             }else{
                 return ApiFormatter::createApi(400, "Failed");
             }
@@ -105,7 +108,7 @@ class LaporAcaraController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = LaporAcara::where('id', $id)
     }
 
     /**

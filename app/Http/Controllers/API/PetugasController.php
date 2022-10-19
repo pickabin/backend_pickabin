@@ -4,7 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ApiFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\Jadwal;
 use App\Models\Petugas;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -15,9 +17,9 @@ class PetugasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($code)
     {
-        $data = Petugas::all();
+        $data = Petugas::where('code', $code)->with('user')->get();
         if($data){
             return ApiFormatter::createApi(200, "Success", $data);
         }else{
@@ -43,29 +45,14 @@ class PetugasController extends Controller
      */
     public function store(Request $request)
     {
+        $data = User::where('uid', '=', $request->uid)->get();
         try{
-            $request->validate([
-                'user_id' => 'required',
-                'code' => 'required',
-                'clean_area' => 'required',
+            Petugas::create([
+                'user_id' => $data[0]->id,
             ]);
-
-            $petugas = Petugas::create([
-                'user_id' => $request->user_id,
-                'code' => $request->code,
-                'clean_area' => $request->clean_area,
-            ]);
-
-            $data = Petugas::where('id', '=', $petugas->id)->get();
-
-            if($data){
-                return ApiFormatter::createApi(200, "Success", $data);
-            }else{
-                return ApiFormatter::createApi(400, "Failed");
-            }
-
+            return ApiFormatter::createApi(200, "Success");
         }catch(Exception $error){
-            return ApiFormatter::createApi(400, "Failed");
+            return ApiFormatter::createApi(400, "Failed", $error);
         }
     }
 
@@ -98,9 +85,20 @@ class PetugasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $user_id)
     {
-        //
+        try{
+            $updatedData = $request->all();
+            Petugas::where('user_id', $user_id)->update($updatedData);
+            Jadwal::create([
+                'user_id' => $user_id,
+                'clean_area' => $request->clean_area,
+                'status' => 0
+            ]);
+            return ApiFormatter::createApi(200, "Success");
+        }catch(Exception $error){
+            return ApiFormatter::createApi(400, "Failed", $error);
+        }
     }
 
     /**
@@ -112,5 +110,26 @@ class PetugasController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function fetchPetugas()
+    {
+        $data = Petugas::with('user')->get();
+        if($data){
+            return ApiFormatter::createApi(200, "Success", $data);
+        }else{
+            return ApiFormatter::createApi(400, "Failed");
+        }
+    }
+
+    public function getPetugasByUid($uid)
+    {
+        $dataTemp = User::where('uid', $uid)->get();
+        $data = Petugas::where('user_id', $dataTemp[0]->id)->get();
+        if($data){
+            return ApiFormatter::createApi(200, "Success", $data);
+        }else{
+            return ApiFormatter::createApi(400, "Failed");
+        }
     }
 }

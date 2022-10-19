@@ -13,6 +13,6 @@ class AktivitasPetugas extends Model
 
     public function jadwal()
     {
-        return $this->hasMany(jadwal::class);
-    }
+        return $this->belongsTo(jadwal::class);
+    }   
 }

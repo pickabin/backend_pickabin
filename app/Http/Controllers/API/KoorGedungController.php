@@ -4,7 +4,10 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ApiFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\Jadwal;
 use App\Models\KoorGedung;
+use App\Models\Petugas;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -17,7 +20,7 @@ class KoorGedungController extends Controller
      */
     public function index()
     {
-        $data = KoorGedung::all();
+        $data = KoorGedung::with('user')->get();
         if($data){
             return ApiFormatter::createApi(200, "Success", $data);
         }else{
@@ -43,30 +46,14 @@ class KoorGedungController extends Controller
      */
     public function store(Request $request)
     {
+        $data = User::where('uid', '=', $request->uid)->get();
         try{
-            $request->validate([
-                'user_id' => 'required',
-                'code' => 'required',
-                'clean_area' => 'required',
+            KoorGedung::create([
+                'user_id' => $data[0]->id,
             ]);
-
-            $koorGedung = KoorGedung::create([
-                'user_id' => $request->user_id,
-                'code' => $request->code,
-                'clean_area' => $request->clean_area,
-            ]);
-
-            $data = KoorGedung::where('id', '=', $koorGedung->id)->get();
-
-            if($data){
-                return ApiFormatter::createApi(200, "Success", $data);
-            }else{
-                return ApiFormatter::createApi(400, "Failed");
-            }
-
+            return ApiFormatter::createApi(200, "Success");
         }catch(Exception $error){
-            return ApiFormatter::createApi(400, "Failed");
-
+            return ApiFormatter::createApi(400, "Failed", $error);
         }
     }
 
@@ -104,9 +91,21 @@ class KoorGedungController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $user_id)
     {
-        //
+        try{
+            $updatedData = $request->all();
+            dd($updatedData);
+            KoorGedung::where('user_id', $user_id)->update($updatedData);
+            Jadwal::create([
+                'user_id' => $user_id,
+                'clean_area' => $request->clean_area,
+                'status' => 0
+            ]);
+            return ApiFormatter::createApi(200, "Success");
+        }catch(Exception $error){
+            return ApiFormatter::createApi(400, "Failed", $error);
+        }
     }
 
     /**
@@ -118,5 +117,16 @@ class KoorGedungController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getKoorByUid($uid)
+    {
+        $dataTemp = User::where('uid', $uid)->get();
+        $data = KoorGedung::where('user_id', $dataTemp[0]->id)->get();
+        if($data){
+            return ApiFormatter::createApi(200, "Success", $data);
+        }else{
+            return ApiFormatter::createApi(400, "Failed");
+        }
     }
 }

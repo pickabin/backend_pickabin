@@ -18,11 +18,11 @@ class Jadwal extends Model
 
     public function aktivitas_koor()
     {
-        return $this->belongsTo(AktivitasKoor::class);
+        return $this->hasMany(AktivitasKoor::class);
     }
 
     public function aktivitas_petugas()
     {
-        return $this->belongsTo(AktivitasPetugas::class);
+        return $this->hasMany(AktivitasPetugas::class);
     }
 }

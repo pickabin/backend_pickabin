@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ApiFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\Jadwal;
 use App\Models\LaporKotor;
 use Exception;
 use Illuminate\Http\Request;
@@ -18,6 +19,17 @@ class LaporKotorController extends Controller
     public function index()
     {
         $data = LaporKotor::all();
+        if($data){
+            return ApiFormatter::createApi(200, "Success", $data);
+        }else{
+            return ApiFormatter::createApi(400, "Failed");
+        }
+    }
+
+    public function getLaporanByArea($user_id)
+    {
+        $jadwal = Jadwal::where('user_id', $user_id)->get();
+        $data = LaporKotor::where([['clean_area', $jadwal[0]->clean_area], ['status', 0]])->get();
         if($data){
             return ApiFormatter::createApi(200, "Success", $data);
         }else{
@@ -44,29 +56,21 @@ class LaporKotorController extends Controller
     public function store(Request $request)
     {
         try{
-            $request->validate([
-                'code' => 'required',
-                'clean_area' => 'required',
-                'photo' => 'required',
-            ]);
-
             $laporKotor = LaporKotor::create([
                 'code' => $request->code,
-                'clean_code' => $request->clean_code,
+                'clean_area' => $request->clean_area,
                 'photo' => $request->photo,
                 'status' => 0
             ]);
 
-            $data = LaporKotor::where('id', '=', $laporKotor->id)->get();
-
-            if($data){
-                return ApiFormatter::createApi(200, "Success", $data);
+            if($laporKotor){
+                return ApiFormatter::createApi(200, "Success", $laporKotor);
             }else{
                 return ApiFormatter::createApi(400, "Failed");
             }
 
         }catch(Exception $error){
-            return ApiFormatter::createApi(400, "Failed");
+            return ApiFormatter::createApi(400, "Failed", $error);
         }
     }
 
@@ -101,7 +105,14 @@ class LaporKotorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            LaporKotor::where('id', $id)->update([
+                'status' => 1
+            ]);       
+            return ApiFormatter::createApi(200, "Success");
+        }catch(Exception $error){
+            return ApiFormatter::createApi(400, "Failed", $error);
+        }
     }
 
     /**

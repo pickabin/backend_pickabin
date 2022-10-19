@@ -18,9 +18,9 @@ class UserController extends Controller
     public function index()
     {
         $data = User::all();
-        if($data){
+        if ($data) {
             return ApiFormatter::createApi(200, "Success", $data);
-        }else{
+        } else {
             return ApiFormatter::createApi(400, "Failed");
         }
     }
@@ -43,7 +43,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        try{
+        try {
             $request->validate([
                 'uid' => 'required',
                 'name' => 'required',
@@ -60,13 +60,12 @@ class UserController extends Controller
 
             $data = User::where('id', '=', $user->id)->get();
 
-            if($data){
+            if ($data) {
                 return ApiFormatter::createApi(200, "Success", $data);
-            }else{
+            } else {
                 return ApiFormatter::createApi(400, "Failed");
             }
-
-        }catch(Exception $error){
+        } catch (Exception $error) {
             return ApiFormatter::createApi(400, "Failed", $error);
         }
     }
@@ -80,9 +79,9 @@ class UserController extends Controller
     public function show($id)
     {
         $data = User::where('id', '=', $id)->get();
-        if($data){
+        if ($data) {
             return ApiFormatter::createApi(200, "Success", $data);
-        }else{
+        } else {
             return ApiFormatter::createApi(400, "Failed");
         }
     }
@@ -107,7 +106,13 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $updatedData = $request->all();
+            User::where('id', $id)->update($updatedData);
+            return ApiFormatter::createApi(200, "Success");
+        } catch (Exception $error) {
+            return ApiFormatter::createApi(400, "Failed", $error);
+        }
     }
 
     /**

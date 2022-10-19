@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ApiFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\AktivitasPetugas;
+use App\Models\Jadwal;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -15,9 +16,10 @@ class AktivitasPetugasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        $data = AktivitasPetugas::all();
+        $jadwal = Jadwal::where('user_id', $id)->with('user')->get();
+        $data = AktivitasPetugas::where('jadwal_id', $jadwal[0]->id)->with('jadwal', 'jadwal.user')->get();
         if($data){
             return ApiFormatter::createApi(200, "Success", $data);
         }else{

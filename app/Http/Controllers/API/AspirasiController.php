@@ -17,7 +17,7 @@ class AspirasiController extends Controller
      */
     public function index()
     {
-        $data = Aspirasi::all();
+        $data = Aspirasi::with('user')->get();
         if($data){
             return ApiFormatter::createApi(200, "Success", $data);
         }else{
@@ -41,17 +41,11 @@ class AspirasiController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $user_id)
     {
         try{
-            $request->validate([
-                'user_id' => 'required',
-                'title' => 'required',
-                'description' => 'required',
-            ]);
-
             $aspirasi = Aspirasi::create([
-                'user_id' => $request->user_id,
+                'user_id' => $user_id,
                 'title' => $request->title,
                 'description' => $request->description,
             ]); 
