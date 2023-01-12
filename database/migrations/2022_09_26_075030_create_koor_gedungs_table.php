@@ -18,7 +18,6 @@ class CreateKoorGedungsTable extends Migration
             $table->foreignId('user_id');
             $table->string('code')->nullable();
             $table->string('clean_area')->nullable();
-            $table->string('photo')->nullable();
             $table->timestamps();
         });
     }

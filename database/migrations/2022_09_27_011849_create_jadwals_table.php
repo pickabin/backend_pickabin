@@ -16,7 +16,9 @@ class CreateJadwalsTable extends Migration
         Schema::create('jadwals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
+            $table->foreignId('petugas_id')->nullable();
             $table->string('clean_area');
+            $table->string('keterangan')->nullable();
             $table->boolean('status');
             $table->timestamps();
         });

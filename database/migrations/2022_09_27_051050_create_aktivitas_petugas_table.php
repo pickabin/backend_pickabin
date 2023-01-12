@@ -16,9 +16,11 @@ class CreateAktivitasPetugasTable extends Migration
         Schema::create('aktivitas_petugas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('jadwal_id');
+            $table->foreignId('petugas_id');
             $table->date('date');
             $table->time('time');
             $table->string('photo');
+            $table->string('feedback')->nullable();
             $table->timestamps();
         });
     }

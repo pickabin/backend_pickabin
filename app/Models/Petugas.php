@@ -16,4 +16,14 @@ class Petugas extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function jadwal()
+    {
+        return $this->hasOne(Jadwal::class);
+    }
+
+    public function aktivitasPetugas()
+    {
+        return $this->hasMany(AktivitasPetugas::class);
+    }
+
 }

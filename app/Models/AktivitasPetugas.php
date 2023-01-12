@@ -14,5 +14,10 @@ class AktivitasPetugas extends Model
     public function jadwal()
     {
         return $this->belongsTo(jadwal::class);
-    }   
+    }  
+    
+    public function petugas()
+    {
+        return $this->belongsTo(Petugas::class);
+    } 
 }

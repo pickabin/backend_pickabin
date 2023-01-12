@@ -16,6 +16,7 @@ class CreateAktivitasKoorsTable extends Migration
         Schema::create('aktivitas_koors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('jadwal_id');
+            $table->foreignId('koor_gedung_id');
             $table->date('date');
             $table->time('time');
             $table->string('photo');

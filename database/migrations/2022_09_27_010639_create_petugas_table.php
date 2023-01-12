@@ -18,7 +18,6 @@ class CreatePetugasTable extends Migration
             $table->foreignId('user_id');
             $table->string('code');
             $table->string('clean_area');
-            $table->string('photo')->nullable();
             $table->timestamps();
         });
     }

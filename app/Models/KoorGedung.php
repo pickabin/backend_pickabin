@@ -20,4 +20,9 @@ class KoorGedung extends Model
     {
         return $this->belongsTo(jadwal::class);
     }
+
+    public function aktivitas_koor()
+    {
+        return $this->hasMany(AktivitasKoor::class);
+    }
 }

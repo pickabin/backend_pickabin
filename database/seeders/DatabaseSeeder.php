@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\Jadwal;
 use App\Models\KoorGedung;
 use App\Models\KoorUmum;
@@ -116,5 +117,21 @@ class DatabaseSeeder extends Seeder
             'status' => 0,
         ]);
         // \App\Models\User::factory(10)->create();
+
+        Admin::create([
+            'name' => 'admin',
+            'address' => 'Surabaya',
+            'phone' => '082887654111',
+            'email' => 'admin@gmail.com',
+            'password' => bcrypt('Admin'),
+        ]);
+
+        Admin::create([
+            'name' => 'test',
+            'address' => 'Surabaya',
+            'phone' => '082887654111',
+            'email' => 'test@gmail.com',
+            'password' => bcrypt('Test123'),
+        ]);
     }
 }

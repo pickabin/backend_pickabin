@@ -16,6 +16,7 @@ class CreateLaporAcarasTable extends Migration
         Schema::create('lapor_acaras', function (Blueprint $table) {
             $table->id();
             $table->string('code');
+            $table->string('tempat');
             $table->string('title');
             $table->string('description');
             $table->date('date');
